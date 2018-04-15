@@ -1,0 +1,60 @@
+package spbau2018.se.start;
+
+import antlrTools.languageL;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TokensWrap {
+    private languageL lex;
+    private List<Token> tokens;
+
+    public TokensWrap() {
+        lex = null;
+        tokens = null;
+    }
+
+    public void setFileName(String fileName) throws IOException {
+        lex = new languageL(CharStreams.fromFileName(fileName));
+        fillTokenList();
+    }
+
+    public void setString(String str) {
+        lex = new languageL(CharStreams.fromString(str));
+        fillTokenList();
+    }
+
+    private void fillTokenList () {
+        CommonTokenStream c = new CommonTokenStream(lex);
+        tokens = new ArrayList<>();
+        int step = 1;
+        Token t = c.LT(step);
+        while (t.getType() != -1) {
+            tokens.add(t);
+            step++;
+            t = c.LT(step);
+        }
+    }
+
+    public ArrayList<String> getTokenList () {
+        ArrayList<String> res = new ArrayList<>();
+        for (Token token : tokens) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(lex.getVocabulary().getSymbolicName(token.getType())+"(");
+            builder.append("\"" + token.getText() + "\", ");
+            builder.append((token.getLine() - 1)  + ", ");
+            builder.append(token.getCharPositionInLine() + ", ");
+            builder.append((token.getCharPositionInLine() + token.getText().length() - 1) + ")");
+            res.add(builder.toString());
+        }
+        return res;
+    }
+}
+
+
+
+

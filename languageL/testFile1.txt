@@ -1,0 +1,8 @@
+fun sum(arg1) {
+arg1 = arg1 * 2;
+}
+
+fun main() {
+var x = 3.54e-3;
+write sum(x)
+}
