@@ -9,14 +9,21 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import java.io.IOException;
 
 public class Start {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         if(args.length == 0) {
             System.out.println("File not found");
             return;
         }
 
-        languageLLexer lexer = new languageLLexer(CharStreams.fromFileName(args[0]));
+        languageLLexer lexer = null;
+        try {
+            lexer = new languageLLexer(CharStreams.fromFileName(args[0]));
+        } catch (IOException e) {
+            System.out.println("File not found");
+            return;
+        }
+
         lexer.removeErrorListeners();
         lexer.addErrorListener(ErrorListener.INSTANCE);
 
