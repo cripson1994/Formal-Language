@@ -1,6 +1,6 @@
 package spbau2018.se.start;
 
-import antlrTools.languageL;
+import antlrTools.languageLLexer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TokensWrap {
-    private languageL lex;
+    private languageLLexer lex;
     private List<Token> tokens;
 
     public TokensWrap() {
@@ -19,12 +19,12 @@ public class TokensWrap {
     }
 
     public void setFileName(String fileName) throws IOException {
-        lex = new languageL(CharStreams.fromFileName(fileName));
+        lex = new languageLLexer(CharStreams.fromFileName(fileName));
         fillTokenList();
     }
 
     public void setString(String str) {
-        lex = new languageL(CharStreams.fromString(str));
+        lex = new languageLLexer(CharStreams.fromString(str));
         fillTokenList();
     }
 
@@ -43,13 +43,12 @@ public class TokensWrap {
     public ArrayList<String> getTokenList () {
         ArrayList<String> res = new ArrayList<>();
         for (Token token : tokens) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(lex.getVocabulary().getSymbolicName(token.getType())+"(");
-            builder.append("\"" + token.getText() + "\", ");
-            builder.append((token.getLine() - 1)  + ", ");
-            builder.append(token.getCharPositionInLine() + ", ");
-            builder.append((token.getCharPositionInLine() + token.getText().length() - 1) + ")");
-            res.add(builder.toString());
+            String builder = lex.getVocabulary().getSymbolicName(token.getType()) + "(" +
+                    "\"" + token.getText() + "\", " +
+                    (token.getLine() - 1) + ", " +
+                    token.getCharPositionInLine() + ", " +
+                    (token.getCharPositionInLine() + token.getText().length() - 1) + ")";
+            res.add(builder);
         }
         return res;
     }

@@ -1,21 +1,35 @@
 package spbau2018.se.start;
 
+import antlrTools.languageLLexer;
+import antlrTools.languageLParser;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+
 import java.io.IOException;
 
 public class Start {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
         if(args.length == 0) {
             System.out.println("File not found");
             return;
         }
-        TokensWrap tokens = new TokensWrap();
+
+        languageLLexer lexer = new languageLLexer(CharStreams.fromFileName(args[0]));
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(ErrorListener.INSTANCE);
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        languageLParser parser = new languageLParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(ErrorListener.INSTANCE);
+
         try {
-            tokens.setFileName(args[0]);
-            for (String str : tokens.getTokenList()) {
-                System.out.println(str);
-            }
-        } catch (IOException e){
-            System.out.println("File not exist");
+            parser.program().enterRule(new Printer());
+        } catch (ParseCancellationException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

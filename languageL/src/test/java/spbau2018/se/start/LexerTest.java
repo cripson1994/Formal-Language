@@ -46,7 +46,7 @@ public class LexerTest {
         valid[1] = Arrays.asList("TVAR(\"var\", 0, 0, 2)", "IDENT(\"c\", 0, 21, 21)", "TEQ(\"=\", 0, 23, 23)",
                 "TDIGIT(\"43.123e-1\", 0, 25, 33)", "TPLUS(\"+\", 0, 49, 49)", "TDIGIT(\"5\", 0, 76, 76)");
         valid[2] = Arrays.asList("TIF(\"if\", 0, 0, 1)", "IDENT(\"y\", 0, 3, 3)", "TPLUS(\"+\", 0, 5, 5)", "TDIGIT(\"1\", 0, 7, 7)",
-                "TEQC(\"==\", 0, 9, 10)", "IDENT(\"x\", 0, 12, 12)", "TTHEN(\"then\", 0, 14, 17)", "TWRITE(\"write\", 0, 19, 23)",
+                "TEQC(\"==\", 0, 9, 10)", "IDENT(\"x\", 0, 12, 12)", "IDENT(\"then\", 0, 14, 17)", "TWRITE(\"write\", 0, 19, 23)",
                 "IDENT(\"y\", 0, 25, 25)", "TELSE(\"else\", 0, 27, 30)", "TWRITE(\"write\", 0, 32, 36)", "IDENT(\"x\", 0, 38, 38)");
         valid[3] = Arrays.asList("TREAD(\"read\", 0, 0, 3)", "IDENT(\"x\", 0, 5, 5)", "TREAD(\"read\", 1, 1, 4)", "IDENT(\"y\", 1, 6, 6)");
         valid[4] = Arrays.asList("TFUN(\"fun\", 0, 0, 2)", "IDENT(\"main\", 0, 4, 7)", "TRPAREN(\"(\", 0, 8, 8)",
