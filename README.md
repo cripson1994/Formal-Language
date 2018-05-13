@@ -27,9 +27,9 @@ fun sum(arg1, arg2 = 7) {
 fun main() {
   var x = 3.54e-3;
   var y;
-  read y;
+  read (y);
   var c = sum(x,y);
-  write x;
+  write (x);
 }
 ```
 - Функции объявляются с ключевого `fun`, а переменные с `var`
