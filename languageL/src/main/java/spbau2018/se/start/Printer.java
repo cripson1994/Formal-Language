@@ -20,6 +20,12 @@ public class Printer extends languageLBaseListener {
         prefix.delete(0,4);
     }
 
+    private void decPrefix(int n) {
+        for (int i = 0; i < n; i++) {
+            prefix.delete(0,4);
+        }
+    }
+
     private void print(String str) {
         System.out.print(prefix.toString() + str);
     }
@@ -33,6 +39,7 @@ public class Printer extends languageLBaseListener {
         return "(" +  tok.getSymbol().getText() + ", " + tok.getSymbol().getLine() + ", " +
                 tok.getSymbol().getCharPositionInLine() + ")";
     }
+
 
     private String getTokenName(Token tok) {
         return languageLParser.VOCABULARY.getSymbolicName(tok.getType());
@@ -67,12 +74,11 @@ public class Printer extends languageLBaseListener {
         print("Body:\n");
         incPrefix();
         ctx.func_body.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterBody(languageLParser.BodyContext ctx) {
-        ctx.statment().forEach(it -> it.enterRule(this));
+         ctx.statment().forEach(it -> it.enterRule(this));
     }
 
     public void enterStatment(languageLParser.StatmentContext ctx) {
@@ -122,23 +128,72 @@ public class Printer extends languageLBaseListener {
         decPrefix();
     }
 
-    public void enterWhile_expr(languageLParser.While_exprContext ctx) {
+    public void enterFor_expr(languageLParser.For_exprContext ctx) {
+        ctx.for_init().enterRule(this);
         print("While statment: " + getContextInfo(ctx) + '\n');
+        ctx.for_condition().enterRule(this);
+        print("Body:\n");
+        incPrefix();
+        ctx.body().enterRule(this);
+        ctx.for_change().enterRule(this);
+        decPrefix(2);
+    }
+
+    public void enterFor_init(languageLParser.For_initContext ctx) {
+        if (ctx.def_var() != null) {
+            ctx.def_var().enterRule(this);
+        }
+        if (ctx.assign_var() != null) {
+            ctx.assign_var().enterRule(this);
+        }
+    }
+
+    public void enterFor_condition(languageLParser.For_conditionContext ctx) {
         incPrefix();
         print("Condition:\n");
         incPrefix();
-        ctx.logic_expr().enterRule(this);
+        if (ctx.logic_expr() != null) {
+            ctx.logic_expr().enterRule(this);
+        } else {
+            print("Logical atom expression: " + getContextInfo(ctx) + '\n');
+            incPrefix();
+            print("Value: (true, " + ctx.start.getLine() + ", " + ctx.start.getCharPositionInLine() + ")\n");
+            decPrefix();
+        }
         decPrefix();
-        print("Body:\n");
-        incPrefix();
-        ctx.while_body.enterRule(this);
-        decPrefix();
-        decPrefix();
+
+    }
+
+    public void enterFor_change(languageLParser.For_changeContext ctx) {
+        if (ctx.assign_var() != null) {
+            ctx.assign_var().enterRule(this);
+        }
+    }
+
+    public void enterWhile_expr(languageLParser.While_exprContext ctx) {
+        if (ctx.TWHILE() != null) {
+            print("While statment: " + getContextInfo(ctx) + '\n');
+            incPrefix();
+            print("Condition:\n");
+            incPrefix();
+            ctx.logic_expr().enterRule(this);
+            decPrefix();
+            print("Body:\n");
+            incPrefix();
+            ctx.while_body.enterRule(this);
+            decPrefix(2);
+        } else {
+            ctx.for_expr().enterRule(this);
+        }
     }
 
     public void enterDef_var(languageLParser.Def_varContext ctx) {
         print("Var definition: " + getContextInfo(ctx) + '\n');
         incPrefix();
+        if (ctx.ternary_expr() != null) {
+            ctx.ternary_expr().enterRule(this);
+            return;
+        }
         print("Name: " + ctx.IDENT() + '\n');
         if (ctx.expr() != null) {
             print("Value: \n");
@@ -150,14 +205,83 @@ public class Printer extends languageLBaseListener {
     }
 
     public void enterAssign_var(languageLParser.Assign_varContext ctx) {
+        if (ctx.ternary_expr() != null) {
+            ctx.ternary_expr().enterRule(this);
+            return;
+        }
         print("Var assignment: " + getContextInfo(ctx) + '\n');
         incPrefix();
-        print("Name: " + ctx.IDENT() + '\n');
-        print("Value: \n");
+        if (ctx.inc_expr() != null) {
+            ctx.inc_expr().enterRule(this);
+        } else if (ctx.dec_expr() != null){
+            ctx.dec_expr().enterRule(this);
+        } else {
+            print("Name: " + ctx.IDENT() + '\n');
+            print("Value: \n");
+            incPrefix();
+            ctx.expr().enterRule(this);
+            decPrefix(2);
+        }
+    }
+
+    public void enterTernary_expr(languageLParser.Ternary_exprContext ctx) {
+        if (ctx.parent instanceof languageLParser.Def_varContext) {
+            print("Name: " + ctx.IDENT() + "\n");
+            decPrefix();
+        }
+        print("If statment:\n");
         incPrefix();
-        ctx.expr().enterRule(this);
+        print("Condition:\n");
+        incPrefix();
+        ctx.logic_expr().enterRule(this);
         decPrefix();
-        decPrefix();
+        print("Body:\n");
+        incPrefix();
+        print("Var assignment:\n");
+        incPrefix();
+        print("Name: " + ctx.IDENT() + "\n");
+        print("Value:\n");
+        incPrefix();
+        ctx.expr(0).enterRule(this);
+        decPrefix(3);
+        print("Else:\n");
+        incPrefix();
+        print("Var assignment:\n");
+        incPrefix();
+        print("Name: "+ ctx.IDENT() + "\n");
+        print("Value:\n");
+        incPrefix();
+        ctx.expr(1).enterRule(this);
+        decPrefix(4);
+    }
+
+    private void incShuger(ParserRuleContext ctx, String op, TerminalNode id) {
+        print("Name: " + id + "\n");
+        print("Value:\n");
+        incPrefix();
+        print("Arithmetic second prior expression: " + getContextInfo(ctx) + "\n");
+        incPrefix();
+        print("Operand: " + op + "\n");
+        print("Left:\n");
+        incPrefix();
+        print("Arithmetic atom expression:\n");
+        incPrefix();
+        print("Var: " + getTokenInfo(id) + "\n");
+        decPrefix(2);
+        print("Right:\n");
+        incPrefix();
+        print("Arithmetic atom expression:\n");
+        incPrefix();
+        print("Value: 1\n");
+        decPrefix(5);
+    }
+
+    public void enterInc_expr(languageLParser.Inc_exprContext ctx) {
+        incShuger(ctx, "TPLUS", ctx.IDENT());
+    }
+
+    public void enterDec_expr(languageLParser.Dec_exprContext ctx) {
+        incShuger(ctx, "TMINUS", ctx.IDENT());
     }
 
     public void enterInvoke_func(languageLParser.Invoke_funcContext ctx) {
@@ -174,8 +298,7 @@ public class Printer extends languageLBaseListener {
             ctx.func_args().get(i).enterRule(this);
             decPrefix();
         }
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterFunc_args(languageLParser.Func_argsContext ctx) {
@@ -211,8 +334,7 @@ public class Printer extends languageLBaseListener {
             ctx.func_args().get(i).enterRule(this);
             decPrefix();
         }
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterReturn_expr(languageLParser.Return_exprContext ctx) {
@@ -221,8 +343,7 @@ public class Printer extends languageLBaseListener {
         print("Value:\n");
         incPrefix();
         ctx.expr().enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterLogicalCompareExpr(languageLParser.LogicalCompareExprContext ctx) {
@@ -236,8 +357,7 @@ public class Printer extends languageLBaseListener {
         print("Right:\n");
         incPrefix();
         ctx.rvalue.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterLogicalBinaryExpr(languageLParser.LogicalBinaryExprContext ctx) {
@@ -251,8 +371,7 @@ public class Printer extends languageLBaseListener {
         print("Right:\n");
         incPrefix();
         ctx.rvalue.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterLogicalParensExpr(languageLParser.LogicalParensExprContext ctx) {
@@ -304,8 +423,7 @@ public class Printer extends languageLBaseListener {
         print("Right:\n");
         incPrefix();
         ctx.rvalue.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterArithmeticPrior2BinaryExpr(languageLParser.ArithmeticPrior2BinaryExprContext ctx) {
@@ -319,8 +437,7 @@ public class Printer extends languageLBaseListener {
         print("Right:\n");
         incPrefix();
         ctx.rvalue.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
     public void enterArithmeticParensExpr(languageLParser.ArithmeticParensExprContext ctx) {
@@ -346,6 +463,11 @@ public class Printer extends languageLBaseListener {
             ctx.invoke_func().enterRule(this);
             decPrefix();
         }
+        if (ctx.assign_var() != null) {
+            incPrefix();
+            ctx.assign_var().enterRule(this);
+            decPrefix();
+        }
         decPrefix();
     }
 
@@ -360,8 +482,7 @@ public class Printer extends languageLBaseListener {
         print("Right:\n");
         incPrefix();
         ctx.parametr.enterRule(this);
-        decPrefix();
-        decPrefix();
+        decPrefix(2);
     }
 
 }

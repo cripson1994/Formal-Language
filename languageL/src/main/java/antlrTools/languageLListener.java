@@ -245,6 +245,46 @@ public interface languageLListener extends ParseTreeListener {
 	 */
 	void exitWhile_expr(languageLParser.While_exprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link languageLParser#for_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_expr(languageLParser.For_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#for_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_expr(languageLParser.For_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#for_init}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_init(languageLParser.For_initContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#for_init}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_init(languageLParser.For_initContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#for_condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_condition(languageLParser.For_conditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#for_condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_condition(languageLParser.For_conditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#for_change}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_change(languageLParser.For_changeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#for_change}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_change(languageLParser.For_changeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link languageLParser#def_var}.
 	 * @param ctx the parse tree
 	 */
@@ -264,6 +304,36 @@ public interface languageLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssign_var(languageLParser.Assign_varContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#ternary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterTernary_expr(languageLParser.Ternary_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#ternary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitTernary_expr(languageLParser.Ternary_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#inc_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterInc_expr(languageLParser.Inc_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#inc_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitInc_expr(languageLParser.Inc_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link languageLParser#dec_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterDec_expr(languageLParser.Dec_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link languageLParser#dec_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitDec_expr(languageLParser.Dec_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link languageLParser#pass_default}.
 	 * @param ctx the parse tree

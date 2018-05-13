@@ -151,6 +151,30 @@ public interface languageLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_expr(languageLParser.While_exprContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link languageLParser#for_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_expr(languageLParser.For_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#for_init}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_init(languageLParser.For_initContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#for_condition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_condition(languageLParser.For_conditionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#for_change}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_change(languageLParser.For_changeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link languageLParser#def_var}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -162,6 +186,24 @@ public interface languageLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssign_var(languageLParser.Assign_varContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#ternary_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernary_expr(languageLParser.Ternary_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#inc_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInc_expr(languageLParser.Inc_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link languageLParser#dec_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDec_expr(languageLParser.Dec_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link languageLParser#pass_default}.
 	 * @param ctx the parse tree
